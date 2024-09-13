@@ -7,8 +7,8 @@ export default defineConfig({
       entry: {
         "index" : resolve(__dirname, 'src/index.ts'),
       },
-      formats: ['cjs'],
-      fileName: (format, entryName) => `${entryName}.${format}`
+      formats: ['es'],
+      fileName: (_, entryName) => `${entryName}.js`
     },
   },
 })
