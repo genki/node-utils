@@ -1,0 +1,139 @@
+import {
+  BaseSchema, type Output, parse as _parse, safeParse, unknown, Pipe, brand,
+  string, custom, coerce, instance, length, minValue, integer, number,
+  minLength, is, object
+} from "valibot";
+import {decode, encode} from "@msgpack/msgpack";
+import type {NotPromise} from "./types";
+import {packA, unpackA} from "./string";
+import {Q} from "./misc";
+import {NOISE_BYTES} from "./noise";
+import {stringify} from "./stringify";
+
+// 自然数
+export const natural = <P extends any[]>(min = 0, ...pipe:P) =>
+  number([minValue(min), integer(), ...pipe]);
+export const packed = (pipe?:Pipe<string>) => brand(string(pipe), "Packed");
+const PackedSchema = packed();
+export type Packed = Output<typeof PackedSchema>;
+
+export const array8n = (n:number) => coerce(instance(Uint8Array, [
+  custom(a => a.length === n)
+]), a => a instanceof ArrayBuffer ? new Uint8Array(a) : a);
+export const ULIDSchema = brand(array8n(16), "ULID");
+export type ULID = Output<typeof ULIDSchema>;
+
+// serverと通信する場合には使えない. バイト列にする必要がある
+export const DataSchema = instance(Uint8Array);
+
+export const SKSchema = brand(array8n(32), "SK");
+export type SK = Output<typeof SKSchema>;
+export const PKSchema = brand(array8n(33), "PK");
+export type PK = Output<typeof PKSchema>;
+export type Nonce = PK;
+export const SigSchema = brand(array8n(64), "Sig");
+export type Sig = Output<typeof SigSchema>;
+
+export const UserIDSchema = brand(packed([minLength(17)]), "UserID");
+export type UserID = Output<typeof UserIDSchema>;
+export const asUserID = (pwG:PK) => packA(pwG) as UserID;
+export const toPK = (uid:UserID) => unpackA(uid) as PK;
+
+const isSK = (a:unknown):a is SK => is(SKSchema, a);
+const isPK = (a:unknown):a is PK => is(PKSchema, a);
+const isSig = (a:unknown):a is Sig => is(SigSchema, a);
+
+// TODO structuredClone必要？
+export const asSK = (a:any[]|Uint8Array):SK => {
+  if (a instanceof Array) return asSK(new Uint8Array(a));
+  if (!isSK(a)) throw Error(`Invalid SK: ${stringify(a)}`);
+  return a;
+}
+export const asPK = (a:any[]|Uint8Array):PK => {
+  if (a instanceof Array) return asPK(new Uint8Array(a));
+  if (!isPK(a)) throw Error(`Invalid PK: ${stringify(a)}`);
+  return a;
+}
+export const asSig = (a:any[]|Uint8Array):Sig => {
+  if (a instanceof Array) return asSig(new Uint8Array(a));
+  if (!isSig(a)) throw Error(`Invalid Sig: ${stringify(a)}`);
+  return a;
+}
+
+// Seq Rowのためのpacked sig.
+// Recordのkeyにするために文字列である必要がある
+export const SignSchema = brand(packed([minLength(32)]), "Sign");
+export type Sign = Output<typeof SignSchema>;
+export const asSign = (sig:Sig) => packA(sig) as Sign;
+export const toSig = (sign:Sign) => unpackA(sign) as Sig;
+
+export const PeerIdSchema = brand(string(), 'PeerId');
+export type PeerId = Output<typeof PeerIdSchema>;
+export const BIdSchema = brand(string([length(22)]), 'BId');
+export type BId = Output<typeof BIdSchema>;
+export const NoiseSchema = brand(array8n(NOISE_BYTES), "Noise");
+export type Noise = Output<typeof NoiseSchema>;
+export const PackedNoiseSchema = brand(packed(), "PackedNoise");
+export type PackedNoise = Output<typeof PackedNoiseSchema>;
+
+export const TSSigSchema = object({
+  ts: natural(),         // timestamp of the server
+  sigTS: SigSchema,      // sig of the time slot by server
+});
+
+// This is the state of the server at the time of the request from the peer.
+// idはピアのクライアントの与信のために必要
+export const ServerStateSchema = object({
+  ...TSSigSchema.entries,
+  delta: number(),       // time advance of the client from the server
+  id: PeerIdSchema,      // id of the requested peer
+  sigId: string(),       // signature of the id by the peer pk
+  bid: BIdSchema,        // browser id of the requested peer
+  age: natural(),        // age of the peer, the count of the updates
+  noise: NoiseSchema,    // noise of the peer
+  bt: natural(),         // build time of the program
+});
+export type ServerState = Output<typeof ServerStateSchema>
+
+export const parseX = <S extends BaseSchema, V>(
+  schema:S, value:NotPromise<V>, def?:Output<S>
+):Output<S> => { try {
+  return _parse(schema, value);
+} catch (e) {
+  if (def !== undefined) return def;
+  const {issues} = safeParse(schema, value);
+  console.error("Failed to parse", {schema, value, issues});
+  throw e;
+} };
+export const parseQ = <S extends BaseSchema, V, O = Output<S>>(
+  schema:S, value:NotPromise<V>
+):Q<O> => {
+  const {issues, output} = safeParse(schema, value);
+  if (issues && issues.length > 0) return undefined;
+  return output as O;
+};
+export const decodeA = <S extends BaseSchema>(
+  code:Uint8Array|ArrayBuffer, schema?:S
+):Output<S> => parseX(schema ?? unknown(), decode(code));
+export const decodeS = <S extends BaseSchema>(
+  str:Packed, schmea?:S
+):Output<S> => decodeA(unpackA(str), schmea);
+export const encodeA = <S extends BaseSchema>(
+  value:S extends undefined ? unknown : Output<S>, schema?:S
+) => encode(_parse(schema ?? unknown(), value), {ignoreUndefined: true});
+// カスケーディング用
+export const outofQ = <T extends BaseSchema, O = Output<T>>(
+  schema:T, value:unknown, then?:(value:O) => Q<boolean>
+): Q<boolean> => {
+  const out:Q<O> = parseQ(schema, value);
+  if (out === undefined) return;
+  if (then) return then(value as O); // mutableなvalueインスタンスを渡す
+  return true;
+};
+// 型ガード用.
+export const outof = <
+  T extends BaseSchema,
+  V extends NotPromise<unknown>, O extends Output<T> = Output<T>
+>(
+  schema:T, value:V, then?:(value:O) => Q<boolean>
+): value is O => !!outofQ(schema, value, then);
