@@ -10,8 +10,8 @@ import type {Upto} from './types';
 
 export const MIN_EB = 2;
 export const MAX_EB = 32 as const; // noiseのうちmeshで使用する範囲
-export const NOISE_BYTES = 16;  // 128 bits
-export const NOISE_FP_SIZE = 6; // 48 bits for fingerprint
+export const NOISE_BYTES = 16;     // 128 bits
+export const NOISE_FP_SIZE = 6;    // 48 bits for fingerprint
 export const NOISE_BITS = NOISE_BYTES*8; // 128 bits
 export const NOISE_DIST_MAX = 2**MAX_EB;
 

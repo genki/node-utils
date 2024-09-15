@@ -10,7 +10,6 @@ import {Q} from "./misc";
 import {NOISE_BYTES} from "./noise";
 import {stringify} from "./stringify";
 
-// 自然数
 export const natural = <P extends any[]>(min = 0, ...pipe:P) =>
   number([minValue(min), integer(), ...pipe]);
 export const packed = (pipe?:Pipe<string>) => brand(string(pipe), "Packed");
@@ -43,7 +42,6 @@ const isSK = (a:unknown):a is SK => is(SKSchema, a);
 const isPK = (a:unknown):a is PK => is(PKSchema, a);
 const isSig = (a:unknown):a is Sig => is(SigSchema, a);
 
-// TODO structuredClone必要？
 export const asSK = (a:any[]|Uint8Array):SK => {
   if (a instanceof Array) return asSK(new Uint8Array(a));
   if (!isSK(a)) throw Error(`Invalid SK: ${stringify(a)}`);
