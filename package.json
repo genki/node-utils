@@ -20,6 +20,9 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@msgpack/msgpack": "3.0.0-beta2",
     "@types/node": "^22.5.4",
