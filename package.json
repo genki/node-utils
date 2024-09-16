@@ -1,6 +1,7 @@
 {
   "name": "@s21g/utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "description": "Utility functions for s21g projects",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,6 +12,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Genki Takiuchi <genki@s21g.com>",
+  "repository": "github:genki/node-utils",
   "files": [
     "dist"
   ],
