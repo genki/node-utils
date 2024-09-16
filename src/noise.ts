@@ -21,6 +21,9 @@ if (NOISE_DIST_MAX > Number.MAX_SAFE_INTEGER) {
 
 export type EB = Upto<typeof MAX_EB>;
 
+// 1~Nまでの数値を表すのに必要なビット数: N=16ならeb=4
+export const ebFor = (N:number) => Math.max(Math.ceil(Math.log2(N)), MIN_EB);
+
 // バッファからnoiseを切り出す. cloneを期待する場合はdupNoiseを使うこと
 export const noiseCode = (code: Uint8Array|number[]):Noise => {
   if (code instanceof Uint8Array) {
