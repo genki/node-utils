@@ -1,6 +1,6 @@
 {
   "name": "@s21g/utils",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Utility functions for s21g projects",
   "type": "module",
   "scripts": {

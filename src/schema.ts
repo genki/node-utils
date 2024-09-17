@@ -58,6 +58,13 @@ export const asSig = (a:any[]|Uint8Array):Sig => {
   return a;
 }
 
+export const pkEq = (a:PK, b:PK) =>
+  a.every((v:number, i:number) => v === b[i]);
+export const sigEq = (s1:Sig, s2:Sig) => {
+  for (let i = 0; i < s1.length; ++i) if (s1[i] !== s2[i]) return false;
+  return true;
+}
+
 // Seq Rowのためのpacked sig.
 // Recordのkeyにするために文字列である必要がある
 export const SignSchema = brand(packed([minLength(32)]), "Sign");
