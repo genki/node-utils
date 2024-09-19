@@ -43,12 +43,12 @@ describe('Noise', () => {
 
   test('noiseSet', () => {
     const noise = noiseCode([0b1011_1001]);
-    expect(noiseSet(noise, 0, 0)).toStrictEqual(noiseCode([0b1011_1000]));
-    expect(noiseSet(noise, 1, 1)).toStrictEqual(noiseCode([0b1011_1010]));
-    expect(noiseSet(noise, 4, 0)).toStrictEqual(noiseCode([0b1010_1010]));
-    expect(noiseSet(noise, 7, 0)).toStrictEqual(noiseCode([0b0010_1010]));
+    expect(noiseSet(noise, 0, 0)).toStrictEqual(noiseCode([0b0011_1001]));
+    expect(noiseSet(noise, 1, 1)).toStrictEqual(noiseCode([0b0111_1001]));
+    expect(noiseSet(noise, 4, 0)).toStrictEqual(noiseCode([0b0111_0001]));
+    expect(noiseSet(noise, 7, 0)).toStrictEqual(noiseCode([0b0111_0000]));
     expect(noiseSet(noise, 8, 1)).
-      toStrictEqual(noiseCode([0b0010_1010, 0b0000_0001]));
+      toStrictEqual(noiseCode([0b0111_0000, 0b1000_0000]));
   });
 
   test('noiseSame', () => {

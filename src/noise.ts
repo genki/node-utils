@@ -9,10 +9,10 @@ import {packA, unpackA} from './string';
 import type {Upto} from './types';
 
 export const MIN_EB = 2;
-export const MAX_EB = 32 as const; // noiseのうちmeshで使用する範囲
-export const NOISE_BYTES = 16;     // 128 bits
+export const MAX_EB = 32;      // noiseのうちmeshで使用する範囲
+export const NOISE_BYTES = 16; // 128 bits
 export const NOISE_FP_SIZE = 6;    // 48 bits for fingerprint
-export const NOISE_BITS = NOISE_BYTES*8; // 128 bits
+export const NOISE_BITS = 8*NOISE_BYTES; // 128 bits
 export const NOISE_DIST_MAX = 2**MAX_EB;
 
 if (NOISE_DIST_MAX > Number.MAX_SAFE_INTEGER) {
@@ -58,8 +58,9 @@ export const zeroNoise = ():Noise => new Uint8Array(NOISE_BYTES) as Noise;
 
 // get the bit of the noise at the index.
 // indexはMSB(=0)側からのビット位置である事に留意
+// 1バイト目の最上位ビットがindex=0
 export const noiseBit = (noise:Noise, index:number) => {
-  const i = index >> 3, j = index & 0b111;
+  const i = index >> 3, j = index&0b111;
   return (noise[i] << j) & 0x80 ? 1 : 0;
 };
 
@@ -71,7 +72,7 @@ export const noiseSet = (noise:Noise, index:number, bit:number) => {
     noise = new Uint8Array(i + 1) as Noise;
     noise.set(noise0);
   }
-  const mask = 1 << j;
+  const mask = 1 << (0b111 - j);
   const code = noise[i] ?? 0;
   noise[i] = bit ? code | mask : code & ~mask;
   return noise;
@@ -102,6 +103,8 @@ export const noiseSlot = (noise:Noise, bits:number):Noise => {
 };
 
 // returns the bitwise LSB index of the slot from the MSB.
+// バイト列の最後の`1`の位置を返す
+// slotがfull noiseの場合はNOISE_BITS+1を返す
 export const slotLSB = (slot:Noise) => {
   let i = 0;
   const code = slot[slot.length - 1];
@@ -145,6 +148,7 @@ export const noiseToHex = (noise:Noise) => {
 };
 
 // returns the binary buf of the slot.
+// MSB側から順に出力される
 // 二進文字列はLSBビット情報を必要としないので出力にLSBは含まない
 export const slotToBin = (slot:Noise, bits?:number) => {
   if (!bits) bits = slotLSB(slot) - 1;
