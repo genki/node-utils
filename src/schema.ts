@@ -1,13 +1,14 @@
 import {
   BaseSchema, type Output, parse as _parse, safeParse, unknown, Pipe, brand,
   string, custom, coerce, instance, length, minValue, integer, number,
-  minLength, is, object
+  minLength, is, object,
+  special
 } from "valibot";
 import {decode, encode} from "@msgpack/msgpack";
 import type {NotPromise} from "./types";
 import {packA, unpackA} from "./string";
 import {Q} from "./misc";
-import {NOISE_BYTES} from "./noise";
+import {EB, MAX_EB, NOISE_BYTES} from "./noise";
 import {stringify} from "./stringify";
 
 export const natural = <P extends any[]>(min = 0, ...pipe:P) =>
@@ -24,6 +25,8 @@ export type ULID = Output<typeof ULIDSchema>;
 
 // serverと通信する場合には使えない. バイト列にする必要がある
 export const DataSchema = instance(Uint8Array);
+export const EBSchema = special<EB>(n =>
+  typeof n === 'number' && n >= 0 && n <= MAX_EB);
 
 export const SKSchema = brand(array8n(32), "SK");
 export type SK = Output<typeof SKSchema>;
