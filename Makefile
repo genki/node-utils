@@ -1,5 +1,8 @@
+default: build
+
 test:
-	pnpm run test --run
+	pnpm test
 
 build:
+	pnpm run test --run
 	pnpm build

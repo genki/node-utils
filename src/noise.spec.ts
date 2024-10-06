@@ -4,6 +4,7 @@ import {
   slotToHex, noiseSet, slotLSB, noiseRank, noiseSameAt, noiseValue,
   noiseForValue, slotToBin, noiseDist, MAX_EB, slotForHex, dupNoise,
   NOISE_BYTES, NOISE_BITS, noiseReverse,
+  ebFor,
 } from './noise';
 
 const countBits = (byte: number) => {
@@ -13,6 +14,15 @@ const countBits = (byte: number) => {
   }
   return count;
 };
+
+describe('EB', () => {
+  test('ebFor', () => {
+    expect(ebFor(8)).toBe(3);
+    expect(ebFor(9)).toBe(4);
+    expect(ebFor(16)).toBe(4);
+    expect(ebFor(17)).toBe(5);
+  });
+});
 
 describe('Noise', () => {
   test('genNoise', () => {
