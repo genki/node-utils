@@ -21,8 +21,8 @@ import type {Packed} from "./schema";
 //
 // このロジックを変更するとhash値などが変わってしまうので注意
 const SURROGATE_OFFSET = 0xD800 - 0x0040;
-const ESC = 0x007f;
-export const SEP = String.fromCharCode(ESC, 0x08FD);
+export const ESC = 0x007f;
+export const SEP = '\u007f\u08FD';
 const encode = (c:number) => {
   if (c >= 0xDC00 && c <= 0xDFFF) {
     // unmatched low surrogate
