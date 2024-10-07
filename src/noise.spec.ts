@@ -3,8 +3,7 @@ import {
   genNoise, noiseBit, noiseSame, noiseFor, noiseCode, noiseLen, noiseSlot,
   slotToHex, noiseSet, slotLSB, noiseRank, noiseSameAt, noiseValue,
   noiseForValue, slotToBin, noiseDist, MAX_EB, slotForHex, dupNoise,
-  NOISE_BYTES, NOISE_BITS, noiseReverse,
-  ebFor,
+  NOISE_BYTES, NOISE_BITS, noiseReverse, ebFor,
 } from './noise';
 
 const countBits = (byte: number) => {

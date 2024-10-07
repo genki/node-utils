@@ -1,8 +1,7 @@
 import {
   BaseSchema, type Output, parse as _parse, safeParse, unknown, Pipe, brand,
-  string, custom, coerce, instance, length, minValue, integer, number,
-  minLength, is, object,
-  special
+  string, custom, coerce, instance, minValue, integer, number, minLength, is,
+  object, special
 } from "valibot";
 import {decode, encode} from "@msgpack/msgpack";
 import type {NotPromise} from "./types";
@@ -75,10 +74,6 @@ export type Sign = Output<typeof SignSchema>;
 export const asSign = (sig:Sig) => packA(sig) as Sign;
 export const toSig = (sign:Sign) => unpackA(sign) as Sig;
 
-export const PeerIdSchema = brand(string(), 'PeerId');
-export type PeerId = Output<typeof PeerIdSchema>;
-export const BIdSchema = brand(string([length(22)]), 'BId');
-export type BId = Output<typeof BIdSchema>;
 export const NoiseSchema = brand(array8n(NOISE_BYTES), "Noise");
 export type Noise = Output<typeof NoiseSchema>;
 export const PackedNoiseSchema = brand(packed(), "PackedNoise");
@@ -88,20 +83,6 @@ export const TSSigSchema = object({
   ts: natural(),         // timestamp of the server
   sigTS: SigSchema,      // sig of the time slot by server
 });
-
-// This is the state of the server at the time of the request from the peer.
-// idはピアのクライアントの与信のために必要
-export const ServerStateSchema = object({
-  ...TSSigSchema.entries,
-  delta: number(),       // time advance of the client from the server
-  id: PeerIdSchema,      // id of the requested peer
-  sigId: string(),       // signature of the id by the peer pk
-  bid: BIdSchema,        // browser id of the requested peer
-  age: natural(),        // age of the peer, the count of the updates
-  noise: NoiseSchema,    // noise of the peer
-  bt: natural(),         // build time of the program
-});
-export type ServerState = Output<typeof ServerStateSchema>
 
 export const parseX = <S extends BaseSchema, V>(
   schema:S, value:NotPromise<V>, def?:Output<S>
