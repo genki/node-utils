@@ -1,7 +1,7 @@
 import {
   BaseSchema, type Output, parse as _parse, safeParse, unknown, Pipe, brand,
   string, custom, coerce, instance, minValue, integer, number, minLength, is,
-  object, special
+  special
 } from "valibot";
 import {decode, encode} from "@msgpack/msgpack";
 import type {NotPromise} from "./types";
@@ -78,11 +78,6 @@ export const NoiseSchema = brand(array8n(NOISE_BYTES), "Noise");
 export type Noise = Output<typeof NoiseSchema>;
 export const PackedNoiseSchema = brand(packed(), "PackedNoise");
 export type PackedNoise = Output<typeof PackedNoiseSchema>;
-
-export const TSSigSchema = object({
-  ts: natural(),         // timestamp of the server
-  sigTS: SigSchema,      // sig of the time slot by server
-});
 
 export const parseX = <S extends BaseSchema, V>(
   schema:S, value:NotPromise<V>, def?:Output<S>
