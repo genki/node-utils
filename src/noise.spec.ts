@@ -1,9 +1,11 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, expectTypeOf } from 'vitest';
 import {
   genNoise, noiseBit, noiseSame, noiseFor, noiseCode, noiseLen, noiseSlot,
   slotToHex, noiseSet, slotLSB, noiseRank, noiseSameAt, noiseValue,
   noiseForValue, slotToBin, noiseDist, MAX_EB, slotForHex, dupNoise,
   NOISE_BYTES, NOISE_BITS, noiseReverse, ebFor,
+  EB,
+  MIN_EB,
 } from './noise';
 
 const countBits = (byte: number) => {
@@ -20,6 +22,12 @@ describe('EB', () => {
     expect(ebFor(9)).toBe(4);
     expect(ebFor(16)).toBe(4);
     expect(ebFor(17)).toBe(5);
+  });
+
+  test('EB()', () => {
+    expect(EB(1)).toBe(MIN_EB);
+    expect(EB(100)).toBe(MAX_EB);
+    expectTypeOf(EB(1)).toEqualTypeOf<EB>();
   });
 });
 

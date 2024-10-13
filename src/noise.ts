@@ -20,6 +20,7 @@ if (NOISE_DIST_MAX > Number.MAX_SAFE_INTEGER) {
 }
 
 export type EB = Upto<typeof MAX_EB>;
+export const EB = (eb:number) => Math.min(Math.max(eb, MIN_EB), MAX_EB) as EB;
 
 // 1~Nまでの数値を表すのに必要なビット数: N=16ならeb=4
 export const ebFor = (N:number) =>
