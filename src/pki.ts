@@ -1,5 +1,5 @@
 import {Packed} from "./schema";
-import {packA, unpackA} from "./string";
+import {joinPacked, packA, packAB, unpackA} from "./string";
 
 // Convert ArrayBuffer to base64 string.
 type AB = ArrayBuffer;
@@ -80,6 +80,17 @@ export const genCryptKeyPair = async () => {
   return {pk, sk};
 };
 
+export const genPackedKeyPair = async () => {
+  const key = await crypto.subtle.generateKey(
+    {name: 'RSA-OAEP', modulusLength: 2048,
+      publicExponent: new Uint8Array([1, 0, 1]),
+      hash: 'SHA-256'}, true, ['encrypt', 'decrypt']);
+
+  const sk = packAB(await crypto.subtle.exportKey('pkcs8', key.privateKey));
+  const pk = packAB(await crypto.subtle.exportKey('spki', key.publicKey));
+  return joinPacked([pk, sk]);
+};
+
 const genRandomKey = async () => {
   return await crypto.subtle.generateKey(
     {name: 'AES-GCM', length: 256}, true, ['encrypt', 'decrypt']);
@@ -97,13 +108,13 @@ export interface Cipher<T = B64> {
 }
 
 // 公開鍵による暗号化
-export const encrypt = async (pk:B64, message:string) => {
+export const encryptA = async (pk:ArrayBuffer, message:string) => {
   const enc = new TextEncoder();
   const key = await genRandomKey();
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const cipher = await crypto.subtle.encrypt(
     {name: 'AES-GCM', iv}, key, enc.encode(message));
-  const pubkey = await crypto.subtle.importKey('spki', stoa(atob(pk)),
+  const pubkey = await crypto.subtle.importKey('spki', pk,
     {name: 'RSA-OAEP', hash: 'SHA-256'}, true, ['encrypt']);
   const secret = await crypto.subtle.encrypt(
     {name: 'RSA-OAEP'}, pubkey, await crypto.subtle.exportKey('raw', key));
@@ -113,11 +124,14 @@ export const encrypt = async (pk:B64, message:string) => {
     secret: btoa(String.fromCharCode(...new Uint8Array(secret))),
   };
 }
+export const encrypt = async (pk:B64, message:string) => {
+  return encryptA(stoa(atob(pk)), message);
+};
 
 // 秘密鍵による復号
-export const decrypt = async (sk:B64, cipher:Cipher) => {
+export const decryptA = async (sk:ArrayBuffer, cipher:Cipher) => {
   const {iv, data, secret} = cipher;
-  const privkey = await crypto.subtle.importKey('pkcs8', stoa(atob(sk)),
+  const privkey = await crypto.subtle.importKey('pkcs8', sk,
     {name: 'RSA-OAEP', hash: 'SHA-256'}, true, ['decrypt']);
   const keyBuf = await crypto.subtle.decrypt(
     {name: 'RSA-OAEP'}, privkey, stoa(atob(secret)));
@@ -127,6 +141,9 @@ export const decrypt = async (sk:B64, cipher:Cipher) => {
   const plain = await crypto.subtle.decrypt(
     {name: 'AES-GCM', iv: stoa(atob(iv))}, key, stoa(atob(data)));
   return dec.decode(plain);
+}
+export const decrypt = async (sk:B64, cipher:Cipher) => {
+  return decryptA(stoa(atob(sk)), cipher);
 }
 
 export const encipherRaw = async (
