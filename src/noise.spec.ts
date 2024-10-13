@@ -27,7 +27,9 @@ describe('EB', () => {
   test('EB()', () => {
     expect(EB(1)).toBe(MIN_EB);
     expect(EB(100)).toBe(MAX_EB);
-    expectTypeOf(EB(1)).toEqualTypeOf<EB>();
+    expect(EB(3.1)).toSatisfy(
+      eb => typeof eb === "number" &&  eb === Math.round(eb));
+    expectTypeOf(EB(3.1)).toEqualTypeOf<EB>();
   });
 });
 
