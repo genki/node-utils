@@ -17,3 +17,5 @@ export function Q<T,U=Defined<T>>(x?:U|void, v?:U):Q<U> {
   return x === undefined ? v : x;
 }
 export type Q<T> = T|undefined;
+
+export const X = <T>(x:T|undefined):x is T => x !== undefined;
