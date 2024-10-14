@@ -1,5 +1,5 @@
 import {Packed} from "./schema";
-import {joinPacked, packA, packAB, unpackA} from "./string";
+import {joinPacked, packA, packAB, packABs, unpackA, unpackAs} from "./string";
 
 // Convert ArrayBuffer to base64 string.
 type AB = ArrayBuffer;
@@ -118,32 +118,45 @@ export const encryptA = async (pk:ArrayBuffer, message:string) => {
     {name: 'RSA-OAEP', hash: 'SHA-256'}, true, ['encrypt']);
   const secret = await crypto.subtle.encrypt(
     {name: 'RSA-OAEP'}, pubkey, await crypto.subtle.exportKey('raw', key));
-  return {
-    iv: btoa(String.fromCharCode(...iv)),
-    data: btoa(String.fromCharCode(...new Uint8Array(cipher))),
-    secret: btoa(String.fromCharCode(...new Uint8Array(secret))),
-  };
+  return {iv, data: cipher, secret};
+}
+export const encryptAP = async (pk:ArrayBuffer, message:string) => {
+  const {iv, data, secret} = await encryptA(pk, message);
+  return packABs([iv, data, secret]);
 }
 export const encrypt = async (pk:B64, message:string) => {
-  return encryptA(stoa(atob(pk)), message);
+  const {iv, data, secret} = await encryptA(stoa(atob(pk)), message);
+  return {
+    iv: btoa(String.fromCharCode(...iv)),
+    data: btoa(String.fromCharCode(...new Uint8Array(data))),
+    secret: btoa(String.fromCharCode(...new Uint8Array(secret))),
+  };
 };
 
 // 秘密鍵による復号
-export const decryptA = async (sk:ArrayBuffer, cipher:Cipher) => {
+export const decryptA = async (sk:ArrayBuffer, cipher:Cipher<ArrayBuffer>) => {
   const {iv, data, secret} = cipher;
   const privkey = await crypto.subtle.importKey('pkcs8', sk,
     {name: 'RSA-OAEP', hash: 'SHA-256'}, true, ['decrypt']);
   const keyBuf = await crypto.subtle.decrypt(
-    {name: 'RSA-OAEP'}, privkey, stoa(atob(secret)));
+    {name: 'RSA-OAEP'}, privkey, secret);
   const key = await crypto.subtle.importKey('raw', keyBuf,
     {name: 'AES-GCM', length: 256}, true, ['encrypt', 'decrypt']);
   const dec = new TextDecoder();
   const plain = await crypto.subtle.decrypt(
-    {name: 'AES-GCM', iv: stoa(atob(iv))}, key, stoa(atob(data)));
+    {name: 'AES-GCM', iv}, key, data);
   return dec.decode(plain);
 }
-export const decrypt = async (sk:B64, cipher:Cipher) => {
-  return decryptA(stoa(atob(sk)), cipher);
+export const decryptAP = async (sk:ArrayBuffer, cipher:Packed) => {
+  const [iv, data, secret] = unpackAs(cipher);
+  return decryptA(sk, {iv, data, secret});
+}
+export const decrypt = async (sk:B64, {iv, data, secret}:Cipher) => {
+  return decryptA(stoa(atob(sk)), {
+    iv: stoa(atob(iv)),
+    data: stoa(atob(data)),
+    secret: stoa(atob(secret)),
+  });
 }
 
 export const encipherRaw = async (

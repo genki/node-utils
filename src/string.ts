@@ -130,6 +130,9 @@ export const unpackA = (code:Packed) => {
   return bytes.subarray(0, j);
 };
 export const packAB = (bytes:ArrayBuffer) => packA(new Uint8Array(bytes));
+export const packABs = (abs:ArrayBuffer[]) =>
+  joinPacked(abs.map(ab => new Uint8Array(ab)).map(packA));
+export const unpackAs = (code:Packed) => splitPacked(code).map(unpackA);
 
 // SEPで結合/分割する
 // NOTE: 階層を持つことはなくflatになる
