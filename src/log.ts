@@ -1,5 +1,5 @@
 export const skip = (...reason:any[]) => {
-  if (!process.env.TEST && process.env.DEV) console.warn(...reason);
+  if (!import.meta.env.TEST && import.meta.env.DEV) console.warn(...reason);
   return undefined;
 }
 export const fail = (...reason:any[]):false => {

@@ -118,7 +118,7 @@ export const encryptA = async (pk:ArrayBuffer, message:string) => {
     {name: 'RSA-OAEP', hash: 'SHA-256'}, true, ['encrypt']);
   const secret = await crypto.subtle.encrypt(
     {name: 'RSA-OAEP'}, pubkey, await crypto.subtle.exportKey('raw', key));
-  return {iv, data: cipher, secret};
+  return {iv, data:new Uint8Array(cipher), secret:new Uint8Array(secret)};
 }
 export const encryptAP = async (pk:ArrayBuffer, message:string) => {
   const {iv, data, secret} = await encryptA(pk, message);

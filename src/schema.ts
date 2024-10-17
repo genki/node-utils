@@ -37,7 +37,7 @@ export type Sig = Output<typeof SigSchema>;
 
 export const UserIDSchema = brand(packed([minLength(17)]), "UserID");
 export type UserID = Output<typeof UserIDSchema>;
-export const asUserID = (pwG:PK) => packA(pwG) as UserID;
+export const asUserID = (pk:PK) => packA(pk) as UserID;
 export const toPK = (uid:UserID) => unpackA(uid) as PK;
 
 const isSK = (a:unknown):a is SK => is(SKSchema, a);

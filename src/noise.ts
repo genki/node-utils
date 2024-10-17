@@ -154,7 +154,7 @@ export const noiseToHex = (noise:Noise) => {
 // MSB側から順に出力される
 // 二進文字列はLSBビット情報を必要としないので出力にLSBは含まない
 export const slotToBin = (slot:Noise, bits?:number) => {
-  if (!bits) bits = slotLSB(slot) - 1;
+  if (bits === undefined) bits = slotLSB(slot) - 1;
   let bin = '';
   for (let i = 0; i < bits; i++) bin += noiseBit(slot, i) ? '1' : '0';
   return bin;
