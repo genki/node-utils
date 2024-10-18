@@ -114,6 +114,14 @@ export const outofQ = <T extends BaseSchema, O = Output<T>>(
   if (then) return then(value as O); // mutableなvalueインスタンスを渡す
   return true;
 };
+export const outofQA = async <T extends BaseSchema, O = Output<T>>(
+  schema:T, value:unknown, then?:(value:O) => Promise<Q<boolean>>
+): Promise<Q<boolean>> => {
+  const out:Q<O> = parseQ(schema, value);
+  if (out === undefined) return;
+  if (then) return then(value as O); // mutableなvalueインスタンスを渡す
+  return true;
+};
 // 型ガード用.
 export const outof = <
   T extends BaseSchema,

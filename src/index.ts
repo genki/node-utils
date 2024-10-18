@@ -7,6 +7,5 @@ export * from "./pki";
 export * from "./future";
 export * from "./ulid";
 export * from "./noise";
-export * from "./log";
 export * from "./schema";
 export * from "./misc";
