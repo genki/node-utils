@@ -1,7 +1,7 @@
 import type {Defined} from "./types";
 
 // for sort()
-export const acmp = (a:Uint8Array, b:Uint8Array) => {
+export const acmp = <T extends number>(a:ArrayLike<T>, b:ArrayLike<T>) => {
   for (let i = 0; i < a.length; i++) {
     const d = a[i] - b[i];
     if (d !== 0) return d;
