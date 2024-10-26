@@ -3,11 +3,11 @@ import type {PartialKeys} from "./types";
 // object retrievals
 export const entries = <
   T extends Record<K, V>, K extends keyof T = keyof T, V extends T[K] = T[K],
->(obj:T|PartialKeys<T>) => Object.entries(obj) as [K,V][];
+>(obj:T|PartialKeys<T>):[K,V][] => Object.entries(obj) as [K,V][];
 
 export const valuesOf = <
   T extends Record<K, V>, K extends keyof T = keyof T, V extends T[K] = T[K],
->(obj:Partial<T>) => Object.values(obj) as V[];
+>(obj:Partial<T>):V[] => Object.values(obj) as V[];
 
 // keyの不在は許容するがキーが存在しながら値の不在は許容しない型関数
 export const keysOf = <
@@ -22,3 +22,7 @@ export const isBlank = (u:unknown) => {
   if (typeof u === 'object') return keysOf(u).length === 0;
   return false;
 };
+
+export const toObject = <K extends string, V>(entries:[K, V][]) =>
+  Object.fromEntries(entries) as Record<K, V>;
+
