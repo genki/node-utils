@@ -6,6 +6,11 @@ describe("object", () => {
     const obj = {a:1, b:2, c:3} as const;
     const values = valuesOf(obj);
     expectTypeOf(values).toEqualTypeOf<(1|2|3)[]>();
+
+    type Foo = {a:number}|{a:string};
+    const objUnion:Foo = {a:"test"} as const;
+    const values1 = valuesOf(objUnion);
+    expect(values1).toEqual(["test"]);
   });
 
   test("entries", () => {

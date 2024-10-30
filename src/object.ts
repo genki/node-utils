@@ -14,9 +14,12 @@ export const entriesX = <
 >(obj:T|PartialKeys<T>):readonly [K,VX][] =>
   Object.entries(obj).filter(([,v]) => v !== undefined) as [K,VX][];
 
-export const valuesOf = <
-  T extends Record<K,V>, K extends keyof T, V extends T[K],
->(obj:Partial<T>):V[] => Object.values(obj) as V[];
+export const valuesOf:{
+  <T extends Record<K,V>, K extends keyof T, V extends T[K]>(obj:T):V[]
+  <T extends Record<K,V>, K extends keyof T, V extends T[K]>
+    (obj:Partial<T>):V[]
+} = <T extends Record<K,V>, K extends keyof T, V extends T[K]>
+  (obj:T|Partial<T>):V[] => Object.values(obj) as V[];
 
 // keyの不在は許容するがキーが存在しながら値の不在は許容しない型関数
 export const keysOf = <

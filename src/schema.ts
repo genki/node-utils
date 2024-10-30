@@ -10,8 +10,8 @@ import {Q} from "./misc";
 import {EB, MAX_EB, NOISE_BYTES} from "./noise";
 import {stringify} from "./stringify";
 
-export const natural = <P extends any[]>(min = 0, ...pipe:P) =>
-  number([minValue(min), integer(), ...pipe]);
+export const natural = <P extends any[]>(min = 0, pipe?:P) =>
+  number([minValue(min), integer(), ...pipe ?? []]);
 export const packed = (pipe?:Pipe<string>) => brand(string(pipe), "Packed");
 const PackedSchema = packed();
 export type Packed = Output<typeof PackedSchema>;
