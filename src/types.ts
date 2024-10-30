@@ -6,9 +6,7 @@ export type DefinedKeys<T> = {
 
 // Compact<T>はT型の値がundefinedではないプロパティを持つ型
 export type Compact<
-  T extends Record<K,V>,
-  K extends keyof T = keyof T,
-  V extends T[K] = T[K],
+  T extends Record<K,V>,K extends PropertyKey = keyof T,V = T[K],
 > = {[P in DefinedKeys<T>]: T[P]};
 
 export type Upto<N extends number, A extends any[] = []> = A['length'] extends N
