@@ -13,6 +13,11 @@ describe("fn", () => {
     setarg(add, 0, "str");
   });
 
+  test("setarg promise", async () => {
+    const add2 = setarg(add, 1, Promise.resolve(2));
+    expect(await add2(1)).toBe(3);
+  });
+
   test("marg", () => {
     const addX = marg(add, 0, (str:string) => parseInt(str));
     expect(addX("1", 2)).toBe(3);
