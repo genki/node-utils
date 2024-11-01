@@ -1,4 +1,4 @@
-import type {Defined} from "./types";
+import type {Defined, NotPromise} from "./types";
 
 // for sort()
 export const acmp = <T extends number>(a:ArrayLike<T>, b:ArrayLike<T>) => {
@@ -18,4 +18,5 @@ export function Q<T,U=Defined<T>>(x?:U|void, v?:U):Q<U> {
 }
 export type Q<T> = T|undefined;
 
-export const X = <T>(x:T|undefined):x is T => x !== undefined;
+export const X = <T>(x:NotPromise<T>|undefined):x is NotPromise<T> =>
+  x !== undefined;

@@ -1,7 +1,7 @@
 import {
-  BaseSchema, type Output, parse as _parse, safeParse, unknown, Pipe, brand,
-  string, custom, coerce, instance, minValue, integer, number, minLength, is,
-  special
+  BaseSchema, type Output, parse as _parse, safeParse, unknown, brand, string,
+  custom, coerce, instance, minValue, integer, number, minLength, is, special,
+  Pipe
 } from "valibot";
 import {decode, encode} from "@msgpack/msgpack";
 import type {NotPromise} from "./types";
@@ -10,9 +10,10 @@ import {Q} from "./misc";
 import {EB, MAX_EB, NOISE_BYTES} from "./noise";
 import {stringify} from "./stringify";
 
-export const natural = <P extends any[]>(min = 0, pipe?:P) =>
+export const natural = <P extends Pipe<number>>(min = 0, pipe?:P) =>
   number([minValue(min), integer(), ...pipe ?? []]);
-export const packed = (pipe?:Pipe<string>) => brand(string(pipe), "Packed");
+export const packed = <P extends Pipe<string>>(pipe?:P) =>
+  brand(string(pipe), "Packed");
 const PackedSchema = packed();
 export type Packed = Output<typeof PackedSchema>;
 
@@ -40,9 +41,9 @@ export type UserID = Output<typeof UserIDSchema>;
 export const asUserID = (pk:PK) => packA(pk) as UserID;
 export const toPK = (uid:UserID) => unpackA(uid) as PK;
 
-const isSK = (a:unknown):a is SK => is(SKSchema, a);
-const isPK = (a:unknown):a is PK => is(PKSchema, a);
-const isSig = (a:unknown):a is Sig => is(SigSchema, a);
+export const isSK = (a:unknown):a is SK => is(SKSchema, a);
+export const isPK = (a:unknown):a is PK => is(PKSchema, a);
+export const isSig = (a:unknown):a is Sig => is(SigSchema, a);
 
 export const asSK = (a:any[]|Uint8Array):SK => {
   if (a instanceof Array) return asSK(new Uint8Array(a));

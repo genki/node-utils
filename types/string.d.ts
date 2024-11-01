@@ -1,0 +1,10 @@
+import type { Packed } from "./schema";
+export declare const ESC = 127;
+export declare const SEP = "\u08FD";
+export declare const packA: (bytes: Uint8Array) => Packed;
+export declare const unpackA: (code: Packed) => Uint8Array;
+export declare const packAB: (bytes: ArrayBuffer) => string & import("valibot").Brand<"Packed">;
+export declare const packABs: (abs: ArrayBuffer[]) => string & import("valibot").Brand<"Packed">;
+export declare const unpackAs: (code: Packed) => Uint8Array[];
+export declare const joinPacked: (ary: Packed[]) => Packed;
+export declare const splitPacked: (code: Packed, limit?: number) => Packed[];

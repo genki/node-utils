@@ -14,7 +14,7 @@
     "moduleDetection": "force",
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "./dist",
+    "declarationDir": "./types",
 
     /* Linting */
     "strict": true,
