@@ -9,7 +9,7 @@ export declare const array8n: (n: number) => import("valibot").InstanceSchema<Ui
 export declare const ULIDSchema: import("valibot").SchemaWithBrand<import("valibot").InstanceSchema<Uint8ArrayConstructor, Uint8Array>, "ULID">;
 export type ULID = Output<typeof ULIDSchema>;
 export declare const DataSchema: import("valibot").InstanceSchema<Uint8ArrayConstructor, Uint8Array>;
-export declare const EBSchema: import("valibot").SpecialSchema<0 | 2 | 32 | 16 | 6 | 8 | 1 | 3 | 4 | 5 | 7 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31, 0 | 2 | 32 | 16 | 6 | 8 | 1 | 3 | 4 | 5 | 7 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31>;
+export declare const EBSchema: import("valibot").SpecialSchema<0 | 2 | 1 | 3 | 32 | 16 | 6 | 8 | 4 | 5 | 7 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31, 0 | 2 | 1 | 3 | 32 | 16 | 6 | 8 | 4 | 5 | 7 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31>;
 export declare const SKSchema: import("valibot").SchemaWithBrand<import("valibot").InstanceSchema<Uint8ArrayConstructor, Uint8Array>, "SK">;
 export type SK = Output<typeof SKSchema>;
 export declare const PKSchema: import("valibot").SchemaWithBrand<import("valibot").InstanceSchema<Uint8ArrayConstructor, Uint8Array>, "PK">;

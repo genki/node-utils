@@ -8,4 +8,5 @@ export * from "./future";
 export * from "./ulid";
 export * from "./noise";
 export * from "./schema";
+export * from "./fn";
 export * from "./misc";
