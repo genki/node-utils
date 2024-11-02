@@ -42,6 +42,7 @@ export declare const parseQ: <S extends BaseSchema, V, O = Output<S>>(schema: S,
 export declare const decodeA: <S extends BaseSchema>(code: Uint8Array | ArrayBuffer, schema?: S) => Output<S>;
 export declare const decodeS: <S extends BaseSchema>(str: Packed, schmea?: S) => Output<S>;
 export declare const encodeA: <S extends BaseSchema>(value: S extends undefined ? unknown : Output<S>, schema?: S) => Uint8Array;
+export declare const encodeS: <S extends BaseSchema>(value: S extends undefined ? unknown : Output<S>, schema?: S) => string & import("valibot").Brand<"Packed">;
 export declare const outofQ: <T extends BaseSchema, O = Output<T>>(schema: T, value: unknown, then?: (value: O) => Q<boolean>) => Q<boolean>;
 export declare const outofQA: <T extends BaseSchema, O = Output<T>>(schema: T, value: unknown, then?: (value: O) => Promise<Q<boolean>>) => Promise<Q<boolean>>;
 export declare const outof: <T extends BaseSchema, V extends NotPromise<unknown>, O extends Output<T> = Output<T>>(schema: T, value: V, then?: (value: O) => Q<boolean>) => value is O;

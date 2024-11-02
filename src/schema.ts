@@ -97,6 +97,10 @@ export const parseQ = <S extends BaseSchema, V, O = Output<S>>(
   if (issues && issues.length > 0) return undefined;
   return output as O;
 };
+
+// codec for string/Uint8Array
+// schemaを指定するとparseした結果をencodeする
+// encode to string
 export const decodeA = <S extends BaseSchema>(
   code:Uint8Array|ArrayBuffer, schema?:S
 ):Output<S> => parseX(schema ?? unknown(), decode(code));
@@ -106,6 +110,10 @@ export const decodeS = <S extends BaseSchema>(
 export const encodeA = <S extends BaseSchema>(
   value:S extends undefined ? unknown : Output<S>, schema?:S
 ) => encode(_parse(schema ?? unknown(), value), {ignoreUndefined: true});
+export const encodeS = <S extends BaseSchema>(
+  value:S extends undefined ? unknown : Output<S>, schema?:S
+) => packA(encodeA(value, schema));
+
 // カスケーディング用
 export const outofQ = <T extends BaseSchema, O = Output<T>>(
   schema:T, value:unknown, then?:(value:O) => Q<boolean>
