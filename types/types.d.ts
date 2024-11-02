@@ -1,5 +1,5 @@
 export type RO<T> = Readonly<T>;
-export type Defined<T = any> = T extends infer U | undefined ? U : never;
+export type Defined<T = any> = Exclude<T, undefined>;
 export type DefinedKeys<T> = {
     [K in keyof T]: T[K] extends undefined ? never : K;
 }[keyof T];

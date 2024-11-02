@@ -1,7 +1,12 @@
 import {describe, expectTypeOf, test} from "vitest";
-import {Compact, InsertAt, RemoveAt, ReplaceAt, TupleSplit} from "./types";
+import {
+  Compact, Defined, InsertAt, RemoveAt, ReplaceAt, TupleSplit
+} from "./types";
 
 describe("types", () => {
+  test("Defined", () => {
+    expectTypeOf<Defined<number|undefined>>().toEqualTypeOf<number>();
+  });
   test("Compact", () => {
     const obj = {a:1, b:"foo", c:undefined};
     type C = Compact<typeof obj>;

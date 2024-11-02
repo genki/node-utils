@@ -1,16 +1,28 @@
 import {describe, expect, expectTypeOf, test} from "vitest";
-import {P, Q, X} from "./misc";
+import {P, Q, X, QX, touch} from "./misc";
 
 describe("misc", () => {
   test("X", async () => {
     expect(X(undefined)).toBe(false);
+    expect(X(Q(0))).toBe(true);
+    // @ts-expect-error no possibility of undefined
     expect(X(0)).toBe(true);
-    // @ts-expect-error
+    // @ts-expect-error promise is not exist yet.
     X(Promise.resolve(0));
     // @ts-expect-error
-    const x:X<number> = Promise.resolve(0);
+    const x:X<number|undefined> = Promise.resolve(0);
     // @ts-expect-error
     const y:X<number|undefined> = undefined;
+    expectTypeOf<X<number|undefined>>().toEqualTypeOf<number>();
+    expectTypeOf<X<number>>().toEqualTypeOf<never>();
+    // @ts-expect-error
+    const z:X<number> = 0;
+    touch(x, y, z);
+  });
+
+  test("QX", async () => {
+    expectTypeOf<QX<number>>().toEqualTypeOf<never>();
+    expectTypeOf<QX<number|undefined>>().toEqualTypeOf<number|undefined>();
   });
 
   test("Q", async () => {
@@ -23,6 +35,9 @@ describe("misc", () => {
     // @ts-expect-error
     Q(0, "str");
     expectTypeOf(Q<number>()).toEqualTypeOf<number|undefined>();
+    expectTypeOf(Q(1)).toEqualTypeOf<number|undefined>();
+    expectTypeOf(Q<string>()).toEqualTypeOf<string|undefined>();
+    expectTypeOf(Q()).toEqualTypeOf<unknown>();
   });
 
   test("P", async () => {
