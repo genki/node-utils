@@ -18,6 +18,17 @@ describe("fn", () => {
     expect(await add2(1)).toBe(3);
   });
 
+  test("setarg func value", async () => {
+    const add2 = setarg(add, 1, () => 2);
+    expect(add2(1)).toBe(3);
+  });
+
+  test("setarg async func", async () => {
+    const add2 = setarg(add, 1, async () => 2);
+    expect(await add2(1)).toBe(3);
+    expectTypeOf(add2).toEqualTypeOf<(a:number) => Promise<number>>();
+  });
+
   test("marg", () => {
     const addX = marg(add, 0, (str:string) => parseInt(str));
     expect(addX("1", 2)).toBe(3);
