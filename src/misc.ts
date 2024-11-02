@@ -18,5 +18,11 @@ export function Q<T,U=Defined<T>>(x?:U|void, v?:U):Q<U> {
 }
 export type Q<T> = T|undefined;
 
+// check the existence of x. promise is not exist yet.
+export type X<T> = Defined<T>&NotPromise<T>;
 export const X = <T>(x:NotPromise<T>|undefined):x is NotPromise<T> =>
   x !== undefined;
+
+// shorthand for Promise
+export type P<T> = Promise<T>;
+export const P = <T>(x:T|Promise<T>):x is Promise<T> => x instanceof Promise;
