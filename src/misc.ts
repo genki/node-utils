@@ -22,14 +22,16 @@ export type Q<T> = T|undefined;
 // undefinedである余地が存在する型
 export type QX<T> = undefined extends T ? T : never;
 
-// check the existence of x. promise is not exist yet.
-export type X<T> = Defined<QX<T>>&NotPromise<QX<T>>;
-export function X<T>(x:NotPromise<QX<T>>):x is NotPromise<QX<T>> {
-  return x !== undefined;
+// check the existence of x. null or promise are not exist.
+export type X<T> = Defined<QX<T>>&NotPromise<QX<T>>&Exclude<T,null>;
+export function X<T extends QX<any>>(
+  x:QX<T>
+):x is X<T> extends QX<T> ? X<T> : never {
+  return x !== undefined && x !== null;
 }
 
 // shorthand for Promise
-export type P<T> = Promise<T>;
 export const P = <T>(x:T|Promise<T>):x is Promise<T> => x instanceof Promise;
+export type P<T> = Promise<T>;
 
 export const touch = (..._:any[]) => {};

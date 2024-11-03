@@ -4,9 +4,10 @@ import {P, Q, X, QX, touch} from "./misc";
 describe("misc", () => {
   test("X", async () => {
     expect(X(undefined)).toBe(false);
-    expect(X(Q(0))).toBe(true);
+    expect(X(Q(null))).toBe(false);
     // @ts-expect-error no possibility of undefined
     expect(X(0)).toBe(true);
+    expect(X(Q(0))).toBe(true);
     // @ts-expect-error promise is not exist yet.
     X(Promise.resolve(0));
     // @ts-expect-error
@@ -18,6 +19,14 @@ describe("misc", () => {
     // @ts-expect-error
     const z:X<number> = 0;
     touch(x, y, z);
+    const foo = async <T extends Promise<number|undefined>>(x:T) => {
+      const y = await x;
+      expectTypeOf(X(y)).toEqualTypeOf<boolean>();
+      if (X(y)) {
+        if (y === 5) return;
+      }
+    }
+    touch(foo);
   });
 
   test("QX", async () => {
@@ -43,6 +52,7 @@ describe("misc", () => {
   test("P", async () => {
     expect(P(0)).toBe(false);
     expect(P(Promise.resolve(0))).toBe(true);
+    expectTypeOf<P<number>>().toEqualTypeOf<Promise<number>>();
     // @ts-expect-error
     const x:P<number> = 0;
     expectTypeOf<P<number>>().toEqualTypeOf<Promise<number>>();
