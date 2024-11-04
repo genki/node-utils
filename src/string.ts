@@ -15,6 +15,8 @@ import type {Packed} from "./schema";
 //   (two-four bytes utf-8)
 // BOM: ESC + 0x08fe (four bytes utf-8)
 // SEP: ESC + 0x08fd (four bytes utf-8) // the separator for the packed data
+// RESERVED:
+//      ESC + 0x0840 <-> 0x08fc
 //
 // If the length of the bytes is odd, the last byte XX is put after the escape
 // character as 0xFFXX.
@@ -111,7 +113,7 @@ export const unpackA = (code:Packed) => {
       // restore the control characters
       bytes[j++] = (c - 0x0020) & 0xff;
       bytes[j++] = c >>> 8;
-    } else if (c <= 0xDFFF - SURROGATE_OFFSET) {
+    } else if (c <= 0xDFFF - SURROGATE_OFFSET) { // c <= 0x83f
       // restore the escaped unmatched surrogate
       const x = c + SURROGATE_OFFSET;
       bytes[j++] = x & 0xff;

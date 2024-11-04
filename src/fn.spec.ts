@@ -40,4 +40,11 @@ describe("fn", () => {
     expect(await addA("1", 2)).toBe(3);
     expectTypeOf(addA).toEqualTypeOf<(a:string, b:number) => Promise<number>>();
   });
+
+  const addOpt = (a:number, b:number = 0) => a + b;
+  test("marg opt", () => {
+    const add3 = marg(addOpt, 1, (str:void|string) => str ? parseInt(str) : 3);
+    expectTypeOf(add3).toEqualTypeOf<(a:number, b:string|void) => number>();
+    expect(add3(1)).toBe(4);
+  });
 });

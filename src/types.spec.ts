@@ -1,16 +1,23 @@
 import {describe, expectTypeOf, test} from "vitest";
 import {
-  Compact, Defined, InsertAt, RemoveAt, ReplaceAt, TupleSplit
+  Compact, Defined, InsertAt, NormalizeOpt, RemoveAt, ReplaceAt, TupleSplit
 } from "./types";
 
 describe("types", () => {
   test("Defined", () => {
     expectTypeOf<Defined<number|undefined>>().toEqualTypeOf<number>();
   });
+
   test("Compact", () => {
     const obj = {a:1, b:"foo", c:undefined};
     type C = Compact<typeof obj>;
     expectTypeOf<C>().toEqualTypeOf<{a:number,b:string}>();
+  });
+
+  test("NormalizeOpt", () => {
+    type Foo = [a:number, b?:string];
+    type N = NormalizeOpt<Foo>;
+    expectTypeOf<N>().toEqualTypeOf<[number, string|undefined]>();
   });
 
   test("TupleSplit", () => {
@@ -20,6 +27,12 @@ describe("types", () => {
     expectTypeOf<TupleSplit<[1,2,3,4], 10>>().toEqualTypeOf<[[1,2,3,4], []]>();
     // @ts-expect-error
     expectTypeOf<TupleSplit<[1,2,3,4], -1>>().toEqualTypeOf<[[], [1,2,3,4]]>();
+  });
+
+  test("TupleSplit with optional", () => {
+    type X = TupleSplit<[a:1,b?:number,c?:3], 2>
+    expectTypeOf<X>().toEqualTypeOf<
+      [[1, number|undefined], [c?:3|undefined]]>();
   });
 
   test("RemoveAt", () => {
@@ -32,6 +45,10 @@ describe("types", () => {
     type Foo = [1, "test", 2];
     type R = ReplaceAt<Foo, 1, number>;
     expectTypeOf<R>().toEqualTypeOf<[1, number, 2]>();
+
+    type Bar = [a:number, b?:number]
+    type S = ReplaceAt<Bar, 1, string>;
+    expectTypeOf<S>().toEqualTypeOf<[a:number, b:string]>();
   });
 
   test("InsertAt", () => {
