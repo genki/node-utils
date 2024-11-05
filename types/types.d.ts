@@ -11,8 +11,34 @@ export type NotPromise<T> = T extends Promise<any> ? never : T;
 export type PartialKeys<T> = {
     [P in keyof T]?: Exclude<T[P], undefined>;
 };
-export type TupleSplit<T, I extends number, O extends any[] = []> = O['length'] extends I ? [O, T] : T extends [infer F, ...infer R] ? TupleSplit<[...R], I, [...O, F]> : [O, T];
-export type Cdr<T extends any[]> = T extends [any, ...infer R] ? R : never;
+declare const tmp: unique symbol;
+type Tmp = typeof tmp;
+type OptToTmp<T> = {
+    [K in keyof T]: undefined extends T[K] ? T[K] | Tmp : T[K];
+};
+type UnOpt<T> = {
+    [K in keyof T]-?: T[K];
+};
+type TmpToUndefined<T> = {
+    [K in keyof T]: Tmp extends T[K] ? Exclude<T[K], Tmp> | undefined : T[K];
+};
+export type NormalizeOpt<T> = TmpToUndefined<UnOpt<OptToTmp<T>>>;
+export type IsOpt<T extends any[], Keys extends keyof T> = {
+    [Key in Keys]?: T[Key];
+} extends Pick<T, Keys> ? true : false;
+export type EscOpt<A extends any[]> = {
+    [K in keyof A]-?: IsOpt<A, K> extends true ? A[K] | Tmp : A[K];
+};
+export type UnescOpt<T extends any[]> = T extends [infer F, ...infer R] ? Tmp extends F ? [_?: Exclude<F, Tmp>, ...UnescOpt<R>] : [F, ...UnescOpt<R>] : [];
+export type TupleSplit<T extends any[], I extends number, O extends any[] = []> = O['length'] extends I ? [O, T] : EscOpt<T> extends [any, ...infer R] ? TupleSplit<[...UnescOpt<R>], I, [...O, T[0]]> : [O, T];
+export type Cdr<T extends any[]> = EscOpt<T> extends [any, ...infer R] ? UnescOpt<R> : never;
 export type RemoveAt<T extends any[], I extends number, T0 extends TupleSplit<T, I>[0] = TupleSplit<T, I>[0], T1 extends TupleSplit<T, I>[1] = TupleSplit<T, I>[1]> = [...T0, ...Cdr<T1>];
 export type ReplaceAt<T extends any[], I extends number, V, T0 extends TupleSplit<T, I>[0] = TupleSplit<T, I>[0], T1 extends TupleSplit<T, I>[1] = TupleSplit<T, I>[1]> = [...T0, V, ...Cdr<T1>];
 export type InsertAt<T extends any[], I extends number, V, T0 extends TupleSplit<T, I>[0] = TupleSplit<T, I>[0], T1 extends TupleSplit<T, I>[1] = TupleSplit<T, I>[1]> = [...T0, V, ...T1];
+export type ParseNum<T extends string> = T extends `${infer U extends number}` ? U : never;
+export type ToString<T extends number> = `${T}` extends `${infer U}` ? U : never;
+export type IsLiteral<T, L> = T extends L ? L extends T ? false : true : false;
+type LiteralArray<T extends readonly any[], L> = T extends [] ? true : T extends [infer Head, ...infer Tail] ? IsLiteral<Head, L> extends true ? LiteralArray<Tail, L> : false : true;
+export type Literals<T extends readonly any[], L> = LiteralArray<T, L> extends true ? T : never;
+export type Contains<A extends any[], T> = A extends [infer First, ...infer Rest] ? [First] extends [T] ? true : Contains<Rest, T> : false;
+export {};

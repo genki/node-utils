@@ -79,3 +79,24 @@ export type ParseNum<T extends string> =
   T extends `${infer U extends number}` ? U : never;
 export type ToString<T extends number> =
   `${T}` extends `${infer U}` ? U : never;
+
+// リテラル型かどうか判別する
+export type IsLiteral<T,L> = T extends L
+  ? L extends T ? false : true : false;
+type LiteralArray<T extends readonly any[],L> = T extends []
+  ? true
+  : T extends [infer Head, ...infer Tail]
+    ? IsLiteral<Head,L> extends true
+      ? LiteralArray<Tail,L>
+      : false
+    : true;
+export type Literals<T extends readonly any[],L> =
+  LiteralArray<T,L> extends true ? T : never;
+
+// タプルがTを含むかどうか判別する
+export type Contains<A extends any[],T> =
+  A extends [infer First, ...infer Rest]
+    ? [First] extends [T]
+      ? true
+      : Contains<Rest, T>
+    : false;

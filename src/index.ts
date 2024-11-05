@@ -9,4 +9,5 @@ export * from "./ulid";
 export * from "./noise";
 export * from "./schema";
 export * from "./fn";
+export * from "./iter";
 export * from "./misc";
