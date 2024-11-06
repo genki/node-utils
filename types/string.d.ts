@@ -1,6 +1,4 @@
 import type { Packed } from "./schema";
-import type { RESERVED_RANGE } from "./reserved";
-import { Contains, Literals } from "./types";
 export declare const ESC = 127;
 export declare const SEP = "\u08FD";
 export declare const packA: (bytes: Uint8Array) => Packed;
@@ -8,9 +6,5 @@ export declare const unpackA: (code: Packed) => Uint8Array;
 export declare const packAB: (bytes: ArrayBuffer) => string & import("valibot").Brand<"Packed">;
 export declare const packABs: (abs: ArrayBuffer[]) => string & import("valibot").Brand<"Packed">;
 export declare const unpackAs: (code: Packed) => Uint8Array[];
-type RESERVED = `\u007f${RESERVED_RANGE}`;
-export type NotPacked = `${string}${RESERVED}${string}`;
-export type Joined<A extends string[]> = Contains<Literals<A, string>, NotPacked> extends true ? never : Packed;
-export declare const joinPacked: <const A extends string[]>(ary: A) => Joined<A>;
+export declare const joinPacked: (ary: Packed[]) => Packed;
 export declare const splitPacked: (code: Packed, limit?: number) => Packed[];
-export {};
