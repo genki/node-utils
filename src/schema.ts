@@ -1,7 +1,7 @@
 import {
   BaseSchema, type Output, parse as _parse, safeParse, unknown, brand, string,
   custom, coerce, instance, minValue, integer, number, minLength, is, special,
-  Pipe
+  Pipe, Issues
 } from "valibot";
 import {decode, encode} from "@msgpack/msgpack";
 import type {NotPromise} from "./types";
@@ -16,6 +16,10 @@ export const packed = <P extends Pipe<string>>(pipe?:P) =>
   brand(string(pipe), "Packed");
 const PackedSchema = packed();
 export type Packed = Output<typeof PackedSchema>;
+export const Packed = <T extends string>(v:T) => {
+  if (/\u007f[\u0840-\u08fc]/.test(v)) throw Error(`Invalid Packed: ${v}`);
+  return v as T & Packed;
+}
 
 export const array8n = (n:number) => coerce(instance(Uint8Array, [
   custom(a => a.length === n)
@@ -90,11 +94,15 @@ export const parseX = <S extends BaseSchema, V>(
   console.error("Failed to parse", {schema, value, issues});
   throw e;
 } };
+type OnFail = <V>(issues:Issues, value:V, schema:BaseSchema) => void;
 export const parseQ = <S extends BaseSchema, V, O = Output<S>>(
-  schema:S, value:NotPromise<V>
+  schema:S, value:NotPromise<V>, onFail?:OnFail,
 ):Q<O> => {
   const {issues, output} = safeParse(schema, value);
-  if (issues && issues.length > 0) return undefined;
+  if (issues && issues.length > 0) {
+    if (onFail) onFail(issues, value, schema);
+    return undefined;
+  }
   return output as O;
 };
 
@@ -116,17 +124,18 @@ export const encodeS = <S extends BaseSchema>(
 
 // カスケーディング用
 export const outofQ = <T extends BaseSchema, O = Output<T>>(
-  schema:T, value:unknown, then?:(value:O) => Q<boolean>
+  schema:T, value:unknown, then?:(value:O) => Q<boolean>, onFail?:OnFail
 ): Q<boolean> => {
-  const out:Q<O> = parseQ(schema, value);
+  const out:Q<O> = parseQ(schema, value, onFail);
   if (out === undefined) return;
   if (then) return then(value as O); // mutableなvalueインスタンスを渡す
   return true;
 };
 export const outofQA = async <T extends BaseSchema, O = Output<T>>(
-  schema:T, value:unknown, then?:(value:O) => Promise<Q<boolean>>
+  schema:T, value:unknown, then?:(value:O) => Promise<Q<boolean>>,
+  onFail?:OnFail
 ): Promise<Q<boolean>> => {
-  const out:Q<O> = parseQ(schema, value);
+  const out:Q<O> = parseQ(schema, value, onFail);
   if (out === undefined) return;
   if (then) return then(value as O); // mutableなvalueインスタンスを渡す
   return true;
@@ -136,5 +145,11 @@ export const outof = <
   T extends BaseSchema,
   V extends NotPromise<unknown>, O extends Output<T> = Output<T>
 >(
-  schema:T, value:V, then?:(value:O) => Q<boolean>
-): value is O => !!outofQ(schema, value, then);
+  schema:T, value:V, then?:(value:O) => Q<boolean>, onFail?:OnFail
+): value is O => !!outofQ(schema, value, then, onFail);
+export const outofX = <
+  T extends BaseSchema,
+  V extends NotPromise<unknown>, O extends Output<T> = Output<T>
+>(
+  schema:T, value:V, onFail?:OnFail
+): value is O => !!outofQ(schema, value, undefined, onFail);

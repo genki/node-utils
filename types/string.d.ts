@@ -7,4 +7,4 @@ export declare const packAB: (bytes: ArrayBuffer) => string & import("valibot").
 export declare const packABs: (abs: ArrayBuffer[]) => string & import("valibot").Brand<"Packed">;
 export declare const unpackAs: (code: Packed) => Uint8Array[];
 export declare const joinPacked: (ary: Packed[]) => Packed;
-export declare const splitPacked: (code: Packed, limit?: number) => Packed[];
+export declare const splitPacked: (code: Packed) => Packed[];

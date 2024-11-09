@@ -100,3 +100,9 @@ export type Contains<A extends any[],T> =
       ? true
       : Contains<Rest, T>
     : false;
+
+// T[K]がBであるようなKの集合
+export type KeysOfT<T,B> = {
+  [K in keyof T]: T[K] extends B ? K : never
+}[keyof T];
+

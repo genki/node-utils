@@ -139,5 +139,4 @@ export const unpackAs = (code:Packed) => splitPacked(code).map(unpackA);
 // SEPで結合/分割する
 // NOTE: 階層を持つことはなくflatになる
 export const joinPacked = (ary:Packed[]) => ary.join(SEP) as Packed;
-export const splitPacked = (code:Packed, limit?:number) =>
-  code.split(SEP, limit) as Packed[];
+export const splitPacked = (code:Packed) => code.split(SEP) as Packed[];

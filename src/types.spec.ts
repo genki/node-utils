@@ -1,6 +1,6 @@
 import {describe, expectTypeOf, test} from "vitest";
 import {
-  Compact, Defined, InsertAt, NormalizeOpt, RemoveAt, ReplaceAt, TupleSplit
+  Compact, Defined, InsertAt, KeysOfT, NormalizeOpt, RemoveAt, ReplaceAt, TupleSplit
 } from "./types";
 
 describe("types", () => {
@@ -57,5 +57,12 @@ describe("types", () => {
     expectTypeOf<R>().toEqualTypeOf<[1, number, "test", 2]>();
     type S = InsertAt<R, 10, number>;
     expectTypeOf<S>().toEqualTypeOf<[1, number, "test", 2, number]>();
+  });
+
+  test("KeysOfT", () => {
+    type Foo = {a:number, b?:string};
+    expectTypeOf<KeysOfT<Foo,number>>().toEqualTypeOf<"a">();
+    expectTypeOf<KeysOfT<Foo,string|undefined>>().toEqualTypeOf<"b">();
+    expectTypeOf<KeysOfT<Foo,object>>().toEqualTypeOf<never>();
   });
 });

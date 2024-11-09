@@ -1,6 +1,7 @@
-import {test, expect} from 'vitest';
+import {test, expect, expectTypeOf} from 'vitest';
 import {SEP, joinPacked, packA, splitPacked, unpackA} from './string';
 import {Packed} from './schema';
+import {Brand} from 'valibot';
 
 test("pack/unpack", () => {
   const a = new Uint8Array([66, 216, 183, 223, 206, 145, 182, 91]);
@@ -70,4 +71,10 @@ test("join/split", () => {
   const code = joinPacked(ary.map(() => packed));
   expect(code).toBe('𠮷野家' + SEP + '𠮷野家' + SEP + '𠮷野家');
   expect(splitPacked(code)).toStrictEqual(ary);
+});
+
+test("type check", () => {
+  expect(Packed("test")).toBe("test");
+  expect(() => Packed("test\u007f\u0855")).toThrow();
+  expectTypeOf(Packed("test")).toEqualTypeOf<"test"&Brand<"Packed">>();
 });
