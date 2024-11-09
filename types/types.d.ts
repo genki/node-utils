@@ -41,4 +41,7 @@ export type IsLiteral<T, L> = T extends L ? L extends T ? false : true : false;
 type LiteralArray<T extends readonly any[], L> = T extends [] ? true : T extends [infer Head, ...infer Tail] ? IsLiteral<Head, L> extends true ? LiteralArray<Tail, L> : false : true;
 export type Literals<T extends readonly any[], L> = LiteralArray<T, L> extends true ? T : never;
 export type Contains<A extends any[], T> = A extends [infer First, ...infer Rest] ? [First] extends [T] ? true : Contains<Rest, T> : false;
+export type KeysToT<T, B> = Defined<{
+    [K in keyof T]: T[K] extends B ? K : never;
+}[keyof T]>;
 export {};

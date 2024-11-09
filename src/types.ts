@@ -102,7 +102,7 @@ export type Contains<A extends any[],T> =
     : false;
 
 // T[K]がBであるようなKの集合
-export type KeysOfT<T,B> = {
+export type KeysToT<T,B> = Defined<{
   [K in keyof T]: T[K] extends B ? K : never
-}[keyof T];
+}[keyof T]>;
 
