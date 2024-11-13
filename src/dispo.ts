@@ -10,8 +10,8 @@ x is {[Symbol.asyncDispose]:() => Promise<any>} => {
 };
 
 export type DispoArray<T extends object> = Array<T> & {
-  [Symbol.dispose]:(this:T) => void;
-  [Symbol.asyncDispose]:(this:T) => Promise<void>;
+  [Symbol.dispose]:() => void;
+  [Symbol.asyncDispose]:() => Promise<void>;
 }
 export const DispoArray = <T extends object>(a:Array<T> = []) => {
   const da = a as DispoArray<T>;
