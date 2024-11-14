@@ -1,5 +1,9 @@
 import {RemoveAt, ReplaceAt} from "./types";
 
+// type-lossless bind
+export const bind = <A extends any[],R,T>(fn:(...a:A) => R, t:T) =>
+  fn.bind(t) as (this:T|void, ...a:A) => R;
+
 // bind the i-th arg with v
 export const setarg = <
   F extends (...args:any) => any,

@@ -5,3 +5,18 @@ export const eqA = <A extends ArrayLike<T>,T>(a:A, b?:A) => {
   for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
   return true;
 }
+
+type CMP<T> = (a:T, b:T) => boolean;
+export function same<T>(
+  this:CMP<T[typeof key]>|void, key:keyof T, ...a:T[]
+):boolean {
+  const vs = a.map(v => v[key]);
+  for (let i = 1; i < a.length; i++) {
+    if (typeof this === 'function') {
+      if (!this(vs[i-1], vs[i])) return false;
+    } else {
+      if (vs[i-1] !== vs[i]) return false;
+    }
+  }
+  return true;
+}
