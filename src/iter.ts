@@ -7,8 +7,8 @@ export const eqA = <A extends ArrayLike<T>,T>(a:A, b?:A) => {
 }
 
 type CMP<T> = (a:T, b:T) => boolean;
-export function same<T>(
-  this:CMP<T[typeof key]>|void, key:keyof T, ...a:T[]
+export function same<A extends any[], K extends keyof A[number]>(
+  this:CMP<A[0][K]>|void, key:K, ...a:A
 ):boolean {
   const vs = a.map(v => v[key]);
   for (let i = 1; i < a.length; i++) {
