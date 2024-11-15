@@ -24,8 +24,8 @@ importers:
         specifier: ^5.6.3
         version: 5.6.3
       valibot:
-        specifier: ^1.0.0-beta.5
-        version: 1.0.0-beta.5(typescript@5.6.3)
+        specifier: file:../clone/valibot/library
+        version: file:../clone/valibot/library(typescript@5.6.3)
       vite:
         specifier: ^5.4.10
         version: 5.4.10(@types/node@22.8.6)
@@ -728,8 +728,8 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
-  valibot@1.0.0-beta.5:
-    resolution: {integrity: sha512-YrU03cSLH8+UIMMAOnYCpD9+c6k/VDlxu13aVDokt/YwtROICC6kkbQeRbamcEuh/+CbFa4pbqOptiNNbHFSog==}
+  valibot@file:../clone/valibot/library:
+    resolution: {directory: ../clone/valibot/library, type: directory}
     peerDependencies:
       typescript: '>=5'
     peerDependenciesMeta:
@@ -1432,7 +1432,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  valibot@1.0.0-beta.5(typescript@5.6.3):
+  valibot@file:../clone/valibot/library(typescript@5.6.3):
     optionalDependencies:
       typescript: 5.6.3
 
