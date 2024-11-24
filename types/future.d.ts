@@ -25,4 +25,5 @@ export declare class Future<T> extends Waitable<T> {
     invalidate(): void;
     promise(): Promise<T>;
 }
+export declare const book: <T>(taker: () => Promise<T> | T) => Future<T>;
 export {};

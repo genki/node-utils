@@ -21,10 +21,14 @@ export const valuesOf:{
 } = <T extends Record<K,V>, K extends keyof T, V extends T[K]>
   (obj:T|Partial<T>):V[] => Object.values(obj) as V[];
 
-// keyの不在は許容するがキーが存在しながら値の不在は許容しない型関数
 export const keysOf = <
   T extends Record<K,V>, K extends keyof T, V extends T[K],
 >(obj:T|PartialKeys<T>) => Object.keys(obj) as K[];
+export const keysOfX = <
+  T extends Record<K,V>,
+  K extends DefinedKeys<T>,
+  V extends T[K],
+>(obj:T|PartialKeys<T>) => entriesX(obj).map(([k]) => k);
 
 export const compact = <T>(a:(T|undefined)[]) =>
   a.filter(v => v !== undefined) as T[];
@@ -37,6 +41,6 @@ export const isBlank = (u:unknown) => {
   return false;
 };
 
-export const toObject = <K extends string, V>(entries:readonly [K, V][]) =>
-  Object.fromEntries(entries) as Record<K, V>;
+export const toObject = <K extends PropertyKey,V>(entries:readonly [K,V][]) =>
+  Object.fromEntries(entries) as Record<K,V>;
 

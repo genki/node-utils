@@ -126,19 +126,19 @@ export const encodeS = <S extends GenericSchema>(
 ) => packA(encodeA(value, schema));
 
 // カスケーディング用
-export const outofQ = <T extends GenericSchema, O = InferOutput<T>>(
-  schema:T, value:unknown, then?:(value:O) => Q<boolean>, onFail?:OnFail
-): Q<boolean> => {
+export const outofQ = <T extends GenericSchema,R,O = InferOutput<T>>(
+  schema:T, value:unknown, then?:(value:O) => R, onFail?:OnFail
+): R|Q<boolean> => {
   const out:Q<O> = parseQ(schema, value, onFail);
   if (out === undefined) return;
   if (then) return then(value as O); // mutableなvalueインスタンスを渡す
   return true;
 };
-export const outofQA = async <S extends GenericSchema>(
+export const outofQA = async <S extends GenericSchema,R>(
   schema:S, value:unknown,
-  then?:(value:InferOutput<S>) => Promise<Q<boolean>>,
+  then?:(value:InferOutput<S>) => Promise<R>,
   onFail?:OnFail
-): Promise<Q<boolean>> => {
+): Promise<R|Q<boolean>> => {
   const out = parseQ(schema, value, onFail);
   if (out === undefined) return;
   if (then) return then(value); // mutableなvalueインスタンスを渡す

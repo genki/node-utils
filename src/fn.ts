@@ -1,3 +1,4 @@
+import {stringify} from "./stringify";
 import {RemoveAt, ReplaceAt} from "./types";
 
 // type-lossless bind
@@ -56,3 +57,19 @@ export const marg = <
     return fn(...args);
   }
 }
+
+export const memoize = <
+  F extends (...args:any) => any,
+  A extends F extends (...args:infer U) => any ? U : any,
+  R extends F extends (...args:A) => infer U ? U : any
+>(fn:F) => {
+  const memos = new Map<string,R>();
+  return (...args:Parameters<F>):R => {
+    const key = stringify(args);
+    const memo = memos.get(key);
+    if (memo) return memo;
+    const value = fn(...args);
+    memos.set(key, value);
+    return value;
+  };
+};

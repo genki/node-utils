@@ -46,8 +46,8 @@ export declare const decodeA: <S extends GenericSchema>(code: Uint8Array | Array
 export declare const decodeS: <S extends GenericSchema>(str: Packed, schmea?: S) => InferOutput<S>;
 export declare const encodeA: <S extends GenericSchema>(value: S extends undefined ? unknown : InferOutput<S>, schema?: S) => Uint8Array;
 export declare const encodeS: <S extends GenericSchema>(value: S extends undefined ? unknown : InferOutput<S>, schema?: S) => string & import("valibot").Brand<"Packed">;
-export declare const outofQ: <T extends GenericSchema, O = InferOutput<T>>(schema: T, value: unknown, then?: (value: O) => Q<boolean>, onFail?: OnFail) => Q<boolean>;
-export declare const outofQA: <S extends GenericSchema>(schema: S, value: unknown, then?: (value: InferOutput<S>) => Promise<Q<boolean>>, onFail?: OnFail) => Promise<Q<boolean>>;
+export declare const outofQ: <T extends GenericSchema, R, O = InferOutput<T>>(schema: T, value: unknown, then?: (value: O) => R, onFail?: OnFail) => R | Q<boolean>;
+export declare const outofQA: <S extends GenericSchema, R>(schema: S, value: unknown, then?: (value: InferOutput<S>) => Promise<R>, onFail?: OnFail) => Promise<R | Q<boolean>>;
 export declare const outof: <S extends GenericSchema>(schema: S, value: unknown, then?: (value: InferOutput<S>) => Q<boolean>, onFail?: OnFail) => value is InferOutput<S>;
 export declare const outofX: <S extends GenericSchema>(schema: S, value: unknown, onFail?: OnFail) => value is InferOutput<S>;
 export {};

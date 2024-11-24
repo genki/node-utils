@@ -1,5 +1,5 @@
-import {describe, expect, expectTypeOf, test} from "vitest";
-import {marg, setarg} from "./fn";
+import {describe, expect, expectTypeOf, test, vi} from "vitest";
+import {marg, memoize, setarg} from "./fn";
 
 describe("fn", () => {
   const add = (a:number, b:number) => a + b;
@@ -46,5 +46,15 @@ describe("fn", () => {
     const add3 = marg(addOpt, 1, (str:void|string) => str ? parseInt(str) : 3);
     expectTypeOf(add3).toEqualTypeOf<(a:number, b:string|void) => number>();
     expect(add3(1)).toBe(4);
+  });
+
+  test("memoize", () => {
+    const add = vi.fn((a:number, b:number) => a + b);
+    const addM = memoize(add);
+    expect(addM(1, 2)).toBe(3);
+    expect(addM(1, 2)).toBe(3);
+    expect(add).toHaveBeenCalledTimes(1);
+    expect(addM(1, 4)).toBe(5);
+    expect(add).toHaveBeenCalledTimes(2);
   });
 });

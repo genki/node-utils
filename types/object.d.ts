@@ -6,6 +6,7 @@ export declare const valuesOf: {
     <T extends Record<K, V>, K extends keyof T, V extends T[K]>(obj: Partial<T>): V[];
 };
 export declare const keysOf: <T extends Record<K, V>, K extends keyof T, V extends T[K]>(obj: T | PartialKeys<T>) => K[];
+export declare const keysOfX: <T extends Record<K, V>, K extends DefinedKeys<T>, V extends T[K]>(obj: T | PartialKeys<T>) => DefinedKeys<T>[];
 export declare const compact: <T>(a: (T | undefined)[]) => T[];
 export declare const isBlank: (u: unknown) => boolean;
-export declare const toObject: <K extends string, V>(entries: readonly [K, V][]) => Record<K, V>;
+export declare const toObject: <K extends PropertyKey, V>(entries: readonly [K, V][]) => Record<K, V>;
