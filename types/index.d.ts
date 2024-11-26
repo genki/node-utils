@@ -11,5 +11,4 @@ export * from "./schema";
 export * from "./fn";
 export * from "./iter";
 export * from "./dispo";
-export * from "./ok";
 export * from "./misc";
