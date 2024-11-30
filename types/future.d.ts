@@ -23,7 +23,7 @@ export declare class Future<T> extends Waitable<T> {
     constructor(taker?: (() => Promise<T> | T) | undefined);
     then(ok?: OK<T>, no?: NO): Promise<void>;
     invalidate(): void;
-    promise(): Promise<T>;
+    get promise(): Promise<T>;
 }
 export declare const book: <T>(taker: () => Promise<T> | T) => Future<T>;
 export {};

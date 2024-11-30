@@ -57,7 +57,7 @@ export class Future<T> extends Waitable<T> {
     if (!this._done) return;
     this._done = false;
   }
-  promise() { return this._promise }
+  get promise() { return this._promise }
 }
 
 export const book = <T>(taker:() => Promise<T>|T) => new Future(taker);

@@ -27,6 +27,14 @@ describe("misc", () => {
       }
     }
     touch(foo);
+
+    // check the real type including null or undefined
+    type JSONSerializable = string|number|boolean|null|undefined|
+      JSONSerializable[]|{[key:string]:JSONSerializable};
+    const bar = 1 as Q<JSONSerializable>;
+    if (X(bar)) {
+      expectTypeOf(bar).toEqualTypeOf<X<JSONSerializable>>();
+    }
   });
 
   test("QX", async () => {

@@ -23,7 +23,7 @@ export type Q<T> = T|undefined;
 export type QX<T> = undefined extends T ? T : never;
 
 // check the existence of x. null or promise are not exist.
-export type X<T> = Defined<QX<T>>&NotPromise<QX<T>>&Exclude<T,null>;
+export type X<T> = Exclude<NotPromise<QX<T>>,null|undefined>;
 export function X<T extends QX<any>>(
   x:QX<T>
 ):x is X<T> extends QX<T> ? X<T> : never {

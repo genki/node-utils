@@ -5,7 +5,7 @@ export declare function Q<T, U = Defined<T>>(x: U | undefined): U | undefined;
 export declare function Q<T, U = Defined<T>>(x: U | undefined | void, v: U): U;
 export type Q<T> = T | undefined;
 export type QX<T> = undefined extends T ? T : never;
-export type X<T> = Defined<QX<T>> & NotPromise<QX<T>> & Exclude<T, null>;
+export type X<T> = Exclude<NotPromise<QX<T>>, null | undefined>;
 export declare function X<T extends QX<any>>(x: QX<T>): x is X<T> extends QX<T> ? X<T> : never;
 export declare const P: <T>(x: T | Promise<T>) => x is Promise<T>;
 export type P<T> = Promise<T>;
