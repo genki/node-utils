@@ -20,3 +20,19 @@ export function same<A extends any[], K extends keyof A[number]>(
   }
   return true;
 }
+
+export const groupBy = <
+  T extends Record<K,V>,
+  K extends keyof T,
+  V extends PropertyKey,
+>(
+  a:T[], key:K
+) => {
+  const map = {} as Record<T[K],T[]>;
+  for (const v of a) {
+    const k = v[key];
+    if (!map[k]) map[k] = [];
+    map[k].push(v);
+  }
+  return map;
+}

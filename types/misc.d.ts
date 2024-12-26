@@ -10,3 +10,4 @@ export declare function X<T extends QX<any>>(x: QX<T>): x is X<T> extends QX<T> 
 export declare const P: <T>(x: T | Promise<T>) => x is Promise<T>;
 export type P<T> = Promise<T>;
 export declare const touch: (..._: any[]) => void;
+export declare const I: <T>(v: T) => T;

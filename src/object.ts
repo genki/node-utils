@@ -41,6 +41,7 @@ export const isBlank = (u:unknown) => {
   return false;
 };
 
-export const toObject = <K extends PropertyKey,V>(entries:readonly [K,V][]) =>
-  Object.fromEntries(entries) as Record<K,V>;
+export const toObject = <K extends PropertyKey,V>(
+  entries:ReadonlyArray<readonly [K,V]>
+) => Object.fromEntries(entries) as Record<K,V>;
 

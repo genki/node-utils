@@ -35,3 +35,8 @@ export const P = <T>(x:T|Promise<T>):x is Promise<T> => x instanceof Promise;
 export type P<T> = Promise<T>;
 
 export const touch = (..._:any[]) => {};
+
+// shorthand for initial value
+// x: v as T; だとvがT型である事を保証できないので
+// x: I<T>(v); を使う
+export const I = <T>(v:T) => v;
