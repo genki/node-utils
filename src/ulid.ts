@@ -35,10 +35,14 @@ export const getULID = (ts:number, rBytes:Uint8Array):ULID => {
 }
 
 // ビット演算は最大32bitまでしか扱えない
-export const genULID = (ts = Date.now()) => {
+export const genULID = (ts = Date.now(), noise?:Uint8Array) => {
   // 乱数部分を生成（80ビット、10バイト）
   const rBytes = new Uint8Array(RANDOM_BYTES);
-  crypto.getRandomValues(rBytes);
+  if (noise && noise.length > RANDOM_BYTES) {
+    rBytes.set(noise.slice(0, RANDOM_BYTES));
+  } else {
+    crypto.getRandomValues(rBytes);
+  }
   return getULID(ts, rBytes);
 }
 
