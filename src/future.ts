@@ -49,7 +49,12 @@ export class Future<T> extends Waitable<T> {
   async then(ok?:OK<T>, no?:NO) {
     if (this.taker && !this._done) {
       this._done = true; // takerの二重実行を避ける
-      this.ok(await this.taker());
+      try {
+        this.ok(await this.taker());
+      } catch (e) {
+        if (no) no(e);
+        this.no(e);
+      }
     }
     return this._promise.then(ok, no);
   }
@@ -59,5 +64,6 @@ export class Future<T> extends Waitable<T> {
   }
   get promise() { return this._promise }
 }
+"./future.spec.ts"
 
 export const book = <T>(taker:() => Promise<T>|T) => new Future(taker);
