@@ -1,3 +1,5 @@
+import {Tuple} from "./types";
+
 // undefined同士の比較は文脈依存になるのでサポートしない
 export const eqA = <A extends ArrayLike<T>,T>(a:A, b?:A) => {
   if (!b) return false;
@@ -35,4 +37,24 @@ export const groupBy = <
     map[k].push(v);
   }
   return map;
+}
+
+// 文字列を同じ長さの部分文字列に分割する
+export const sliceBy = (str:string, n:number) => {
+  const len = Math.ceil(str.length / n);
+  const res = [];
+  for (let i = 0; i < str.length; i += len) {
+    res.push(str.slice(i, i + len));
+  }
+  return res;
+}
+
+// arrayを同じ長さの部分tupleに分割する
+export const sliceByA = <V,N extends number>(ary:V[], n:N) => {
+  const count = Math.ceil(ary.length/n);
+  const res = [];
+  for (let i = 0; i < count; ++i) {
+    res.push(ary.slice(i*n, (i + 1)*n));
+  }
+  return res as Tuple<V,N>[];
 }

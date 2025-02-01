@@ -4,6 +4,12 @@ export type DefinedKeys<T> = {
   [K in keyof T]: T[K] extends undefined ? never : K
 }[keyof T];
 
+// tuple with length N
+export type Tuple<T, N extends number> = N extends N
+  ? number extends N ? T[] : _TupleOf<T, N, []> : never;
+type _TupleOf<T, N extends number, R extends unknown[]> =
+  R['length'] extends N ? R : _TupleOf<T, N, [T, ...R]>;
+
 // Compact<T>はT型の値がundefinedではないプロパティを持つ型
 export type Compact<
   T extends Record<K,V>,K extends PropertyKey = keyof T,V = T[K],

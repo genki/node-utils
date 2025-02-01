@@ -3,6 +3,8 @@ export type Defined<T = any> = Exclude<T, undefined>;
 export type DefinedKeys<T> = {
     [K in keyof T]: T[K] extends undefined ? never : K;
 }[keyof T];
+export type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
+type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N ? R : _TupleOf<T, N, [T, ...R]>;
 export type Compact<T extends Record<K, V>, K extends PropertyKey = keyof T, V = T[K]> = {
     [P in DefinedKeys<T>]: T[P];
 };
