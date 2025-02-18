@@ -3,12 +3,20 @@ import {
   string, instance, minValue, integer, number, minLength, is, custom, pipe,
   transform, length, union, BaseIssue,
 } from "valibot"
-import {decode, encode} from "@msgpack/msgpack";
 import type {NotPromise} from "./types";
 import {packA, unpackA} from "./string";
 import {Q} from "./misc";
 import {EB, MAX_EB, NOISE_BYTES} from "./noise";
 import {stringify} from "./stringify";
+
+export type Decoder = typeof import("@msgpack/msgpack").decode;
+export type Encoder = typeof import("@msgpack/msgpack").encode;
+let decode:Decoder;
+let encode:Encoder;
+export const initCodec = (e:Encoder, d:Decoder) => {
+  decode = d;
+  encode = e;
+}
 
 export const natural = (min = 0) => pipe(number(), minValue(min) , integer());
 export const packed = () => pipe(string(), brand("Packed"));

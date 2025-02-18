@@ -1,6 +1,9 @@
 import { GenericSchema, type InferOutput, BaseIssue } from "valibot";
 import type { NotPromise } from "./types";
 import { Q } from "./misc";
+export type Decoder = typeof import("@msgpack/msgpack").decode;
+export type Encoder = typeof import("@msgpack/msgpack").encode;
+export declare const initCodec: (e: Encoder, d: Decoder) => void;
 export declare const natural: (min?: number) => import("valibot").SchemaWithPipe<[import("valibot").NumberSchema<undefined>, import("valibot").MinValueAction<number, number, undefined>, import("valibot").IntegerAction<number, undefined>]>;
 export declare const packed: () => import("valibot").SchemaWithPipe<[import("valibot").StringSchema<undefined>, import("valibot").BrandAction<string, "Packed">]>;
 declare const PackedSchema: import("valibot").SchemaWithPipe<[import("valibot").StringSchema<undefined>, import("valibot").BrandAction<string, "Packed">]>;
