@@ -1,4 +1,4 @@
-type OK<T> = (value: T) => void;
+type OK<T,R=T> = (value: T) => R;
 type NO = (e: any) => void;
 export class Waitable<T> {
   public ok!: OK<T>;
@@ -14,6 +14,7 @@ export class Waitable<T> {
       this.ok = (x:T) => {
         ok(x);
         this._done = true;
+        return x;
       }
       this.no = (e:Error) => no(e);
     });
@@ -46,7 +47,7 @@ export const readies = <T extends {ready:Future<Required<T>&T>}>
 // awaitable future
 export class Future<T> extends Waitable<T> {
   constructor(protected taker?:() => Promise<T>|T) { super() }
-  async then(ok?:OK<T>, no?:NO) {
+  async then<R>(ok?:OK<T,R>, no?:NO) {
     if (this.taker && !this._done) {
       this._done = true; // takerの二重実行を避ける
       try {

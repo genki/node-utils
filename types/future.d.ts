@@ -1,4 +1,4 @@
-type OK<T> = (value: T) => void;
+type OK<T, R = T> = (value: T) => R;
 type NO = (e: any) => void;
 export declare class Waitable<T> {
     ok: OK<T>;
@@ -9,7 +9,7 @@ export declare class Waitable<T> {
     reset(): void;
     wait<S>(done: (x: T) => S, yet?: () => void): Promise<S>;
     get done(): boolean;
-    update(x: T): void;
+    update(x: T): T | undefined;
 }
 export declare const waiter: <T, R, A extends any[]>(w: Waitable<T>, done: (x: T) => (...args: A) => Promise<R> | R) => (...args: A) => Promise<R>;
 export declare const ready: <T extends {
@@ -21,7 +21,7 @@ export declare const readies: <T extends {
 export declare class Future<T> extends Waitable<T> {
     protected taker?: (() => Promise<T> | T) | undefined;
     constructor(taker?: (() => Promise<T> | T) | undefined);
-    then(ok?: OK<T>, no?: NO): Promise<void>;
+    then<R>(ok?: OK<T, R>, no?: NO): Promise<void | R>;
     invalidate(): void;
     get promise(): Promise<T>;
 }

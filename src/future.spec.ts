@@ -16,4 +16,10 @@ describe("Future", () => {
     // check promise rejected
     expect(f.done).toBeTruthy();
   });
+
+  test("ok returns value", async () => {
+    const f = new Future<number>();
+    const n = await Promise.resolve(42).then(f.ok);
+    expect(n).toBe(42);
+  });
 });
