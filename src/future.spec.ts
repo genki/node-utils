@@ -4,7 +4,7 @@ import {Future} from "./future";
 describe("Future", () => {
   test("error in taker", {timeout:200}, async () => {
     const f = new Future(() => {
-      throw new Error("error");
+      throw Error("error");
     });
     let handled = false;
     try {
@@ -15,6 +15,8 @@ describe("Future", () => {
     expect(handled).toBeTruthy();
     // check promise rejected
     expect(f.done).toBeTruthy();
+    //expect(fin).toHaveBeenCalled();
+    //expect(err).toHaveBeenCalled();
   });
 
   test("ok returns value", async () => {

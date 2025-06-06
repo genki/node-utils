@@ -57,7 +57,7 @@ export class Future<T> extends Waitable<T> {
         this.no(e);
       }
     }
-    return this._promise.then(ok, no);
+    return this._promise.then(ok).catch(no);
   }
   invalidate() {
     if (!this._done) return;
@@ -65,6 +65,5 @@ export class Future<T> extends Waitable<T> {
   }
   get promise() { return this._promise }
 }
-"./future.spec.ts"
 
 export const book = <T>(taker:() => Promise<T>|T) => new Future(taker);

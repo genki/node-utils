@@ -1,12 +1,8 @@
 import { describe, test, expect } from "vitest";
 import {
   encrypt, decrypt, genCryptKeyPair, encipher, decipher, genSignKeyPair, sign,
-  verify, encipherRaw, decipherRaw,
-  genPackedKeyPair,
-  encryptA,
-  decryptA,
-  encryptAP,
-  decryptAP
+  verify, encipherRaw, decipherRaw, genPackedKeyPair, encryptA, decryptA,
+  encryptAP, decryptAP
 } from './pki';
 import type {Packed} from './schema';
 import {splitPacked, unpackA} from "./string";
