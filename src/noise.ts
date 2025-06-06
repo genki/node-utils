@@ -221,7 +221,7 @@ export const NoiseValueMax = noiseValue(noiseNeg(zeroNoise()));
 export const noiseForValue = (value:bigint) => {
   const noise = new Uint8Array(NOISE_BYTES);
   for (let i = NOISE_BYTES - 1; i >= 0; i--) {
-    noise[i] = Number(value & 0xffffn);
+    noise[i] = Number(value & 0xffn);
     value >>= 8n;
   }
   return noise as Noise;
