@@ -8,7 +8,7 @@ export const tsToA6 = (ts:number) => {
   else if (ts > MAX_TS) ts = MAX_TS;
   const bytes = new Uint8Array(6);
   for (let i = 5; i >= 0; i--) {
-    bytes[i] = ts & 0xFFFF;
+    bytes[i] = ts & 0xFF;
     ts /= 256;
   }
   return bytes;
