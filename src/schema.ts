@@ -124,8 +124,8 @@ export const decodeA = <S extends GenericSchema>(
   code:Uint8Array|ArrayBuffer, schema?:S
 ):InferOutput<S> => parseX(schema ?? unknown(), decode(code));
 export const decodeS = <S extends GenericSchema>(
-  str:Packed, schmea?:S
-):InferOutput<S> => decodeA(unpackA(str), schmea);
+  str:Packed, schema?:S
+):InferOutput<S> => decodeA(unpackA(str), schema);
 export const encodeA = <S extends GenericSchema>(
   value:S extends undefined ? unknown : InferOutput<S>, schema?:S
 ) => encode(_parse(schema ?? unknown(), value), {ignoreUndefined: true});
