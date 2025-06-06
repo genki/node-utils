@@ -46,7 +46,7 @@ type Issues = [BaseIssue<unknown>, ...BaseIssue<unknown>[]];
 type OnFail = <V>(issues: Issues, value: V, schema: GenericSchema) => void;
 export declare const parseQ: <S extends GenericSchema, V, O = InferOutput<S>>(schema: S, value: NotPromise<V>, onFail?: OnFail) => Q<O>;
 export declare const decodeA: <S extends GenericSchema>(code: Uint8Array | ArrayBuffer, schema?: S) => InferOutput<S>;
-export declare const decodeS: <S extends GenericSchema>(str: Packed, schmea?: S) => InferOutput<S>;
+export declare const decodeS: <S extends GenericSchema>(str: Packed, schema?: S) => InferOutput<S>;
 export declare const encodeA: <S extends GenericSchema>(value: S extends undefined ? unknown : InferOutput<S>, schema?: S) => Uint8Array;
 export declare const encodeS: <S extends GenericSchema>(value: S extends undefined ? unknown : InferOutput<S>, schema?: S) => string & import("valibot").Brand<"Packed">;
 export declare const outofQ: <T extends GenericSchema, R, O = InferOutput<T>>(schema: T, value: unknown, then?: (value: O) => R, onFail?: OnFail) => R | Q<boolean>;
